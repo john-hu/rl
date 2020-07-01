@@ -19,13 +19,13 @@ class RL:
     parser = argparse.ArgumentParser()
     parser.add_argument('--display', type=str2bool, default=False)
     parser.add_argument('--episodes', type=int, default=10000)
-    parser.add_argument('--training-batch-size', type=int, default=32)
+    parser.add_argument('--training-batch-size', type=int, default=128)
     args = parser.parse_args()
     self.display = args.display
     self.training_batch_size = args.training_batch_size
     self.episodes = args.episodes
     # create env
-    self.env = gym.make('CartPole-v1')
+    self.env = gym.make('Acrobot-v1')
     self.state_size = self.env.observation_space.shape[0]
     self.action_size = self.env.action_space.n
     # create agent
@@ -38,13 +38,13 @@ class RL:
     self.agent.load_weights(self.weights_path)
 
   def run(self):
-    print(f'Run CartPole with display: {self.display} and episodes: {self.episodes}')
+    print(f'Run Acrobot with display: {self.display} and episodes: {self.episodes}')
     try:
       for episode in range(self.episodes):
         state = self.env.reset()
 
         done = False
-        step_count = 0
+        total_reward = 0
         while not done:
           if self.display:
             self.env.render()
@@ -53,8 +53,8 @@ class RL:
           (next_state, reward, done, _) = self.env.step(action)
           self.agent.remember(state, action, reward, next_state, done)
           state = next_state
-          step_count += 1
-        print(f'Episode {episode + 1}# Score: {step_count}')
+          total_reward += reward
+        print(f'Episode {episode + 1}# Total Score: {total_reward}')
         # train the model with the history
         self.agent.replay(self.training_batch_size)
     finally:
@@ -62,6 +62,6 @@ class RL:
       self.agent.save_weights(self.weights_path)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     rl = RL()
     rl.run()
