@@ -130,3 +130,5 @@ dmypy.json
 
 # Weights
 **/*.h5
+
+.DS_Store
