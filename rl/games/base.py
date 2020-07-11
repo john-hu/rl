@@ -49,26 +49,6 @@ class BaseGame(ABC):
         self.weights_path = os.path.join(cfg.get('weight_path', './weights'), f'{self.name}.h5')
         self.agent.load_weights(self.weights_path)
 
+    @abstractmethod
     def run(self):
-        print(f'Run {self.name} with display: {self.display} and episodes: {self.episodes}')
-        try:
-            for episode in range(self.episodes):
-                state = self.env.reset()
-                self.on_game_reset(episode)
-
-                done = False
-                while not done:
-                    if self.display:
-                        self.env.render()
-                    # choose action with the model
-                    action = self.agent.choose_action(state)
-                    (next_state, reward, done, _) = self.env.step(action)
-                    self.agent.remember(state, action, reward, next_state, done)
-                    self.on_step_result(state, action, reward, next_state, done)
-                    state = next_state
-                self.on_game_end(episode)
-                # train the model with the history
-                self.agent.replay(self.training_batch_size)
-        finally:
-            # always save the model even if we press ctrl+c
-            self.agent.save_weights(self.weights_path)
+        pass
