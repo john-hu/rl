@@ -5,13 +5,16 @@ from abc import ABC, abstractmethod
 class BaseGame(ABC):
     def __init__(self, cfg, agent_cls, model_cls):
         print('init game')
-        self.display = cfg.get('display', False)
-        self.training_batch_size = cfg.get('training_batch_size', 32)
-        self.episodes = cfg.get('episodes', 10000)
+        cfg_game = cfg.get('game', {})
+        self.display = cfg_game.get('display', False)
+        self.training_batch_size = cfg_game.get('training_batch_size', 32)
+        self.episodes = cfg_game.get('episodes', 10000)
         self.state_size = 0
         self.action_size = 0
         self.env = None
         self.agent = None
+        self.train_on_step = cfg_game.get('train_on_step', False)
+        self.train_on_replay = cfg_game.get('train_on_replay', True)
         # create env
         updated_cfg = self.create_env(cfg)
         print('create env done')

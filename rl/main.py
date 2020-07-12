@@ -31,8 +31,9 @@ def main():
         cfg = json.load(file_handle)
     agent_cls = get_agent_cls(args.agent)
     model_cls = get_model_cls(args.model)
-    cfg['display'] = args.display
-    cfg['episodes'] = args.episodes
+    cfg_game = cfg.get('game', {})
+    cfg_game['display'] = args.display
+    cfg_game['episodes'] = args.episodes
     game = create_game(args.game, cfg, agent_cls, model_cls)
     game.run()
 

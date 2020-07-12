@@ -38,12 +38,7 @@ class SimpleAgent(BaseAgent):
         return np.argmax(actions_rewards[0])
 
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append((
-            np.reshape(state, [1, self.state_size]),
-            action,
-            reward,
-            np.reshape(next_state, [1, self.state_size]),
-            done))
+        self.memory.append((state, action, reward, next_state, done))
 
     def replay(self, batch_size):
         if len(self.memory) < batch_size:
@@ -52,18 +47,21 @@ class SimpleAgent(BaseAgent):
             training_batch = random.sample(self.memory, batch_size)
 
         for (state, action, reward, next_state, done) in training_batch:
-            target = reward
-            if not done:
-                # calcuare the next action rewards
-                next_reward = np.amax(self.model.predict(next_state)[0])
-                # adds future reward expectation
-                target = reward + self.gamma * next_reward
-            # predict and train
-            target_f = self.model.predict(state)
-            target_f[0][action] = target
-            self.model.fit(state, target_f, epochs=1, verbose=0)
+            self.train_on_step(state, action, reward, next_state, done)
         # decay the exploration rate
         self.exploration.decay()
 
     def train_on_step(self, state, action, reward, next_state, done):
-        pass
+        # reshape the state to [1, self.state_size]
+        np_state = np.reshape(state, [1, self.state_size])
+        np_next_state = np.reshape(next_state, [1, self.state_size])
+        target = reward
+        if not done:
+            # calcuare the next action rewards
+            next_reward = np.amax(self.model.predict(np_next_state)[0])
+            # adds future reward expectation
+            target = reward + self.gamma * next_reward
+        # predict and train
+        target_f = self.model.predict(np_state)
+        target_f[0][action] = target
+        self.model.fit(np_state, target_f, epochs=1, verbose=0)

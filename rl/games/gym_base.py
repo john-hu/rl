@@ -34,10 +34,13 @@ class GymBaseGame(BaseGame):
                     (next_state, reward, done, _) = self.env.step(action)
                     self.agent.remember(state, action, reward, next_state, done)
                     self.on_step_result(state, action, reward, next_state, done)
+                    if self.train_on_step:
+                        self.agent.train_on_step(state, action, reward, next_state, done)
                     state = next_state
                 self.on_game_end(episode)
-                # train the model with the history
-                self.agent.replay(self.training_batch_size)
+                if self.train_on_replay:
+                    # train the model with the history
+                    self.agent.replay(self.training_batch_size)
         finally:
             # always save the model even if we press ctrl+c
             self.agent.save_weights(self.weights_path)
