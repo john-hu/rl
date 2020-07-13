@@ -49,9 +49,21 @@ class BaseGame(ABC):
         self.agent = agent_cls(cfg, model_cls)
         print('create agent done')
         # load weights if available
-        self.weights_path = os.path.join(cfg.get('weight_path', './weights'), f'{self.name}.h5')
+        self.weights_basepath = cfg.get('weight_path', './weights')
+        self.weights_path = os.path.join(self.weights_basepath, f'{self.name}.h5')
         self.agent.load_weights(self.weights_path)
 
     @abstractmethod
-    def run(self):
+    def run_one_game(self, episode):
         pass
+
+    def run(self):
+        print(f'Run {self.name} with display: {self.display} and episodes: {self.episodes}')
+        try:
+            for episode in range(self.episodes):
+                self.run_one_game(episode)
+        finally:
+            # always save the model even if we press ctrl+c
+            if not os.path.exists(self.weights_basepath):
+                os.makedirs(self.weights_basepath)
+            self.agent.save_weights(self.weights_path)
