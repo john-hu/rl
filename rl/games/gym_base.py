@@ -1,5 +1,4 @@
 from abc import abstractmethod
-import os
 import gym
 
 from .base import BaseGame

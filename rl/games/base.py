@@ -19,6 +19,7 @@ class BaseGame(ABC):
         updated_cfg = self.create_env(cfg)
         print('create env done')
         self.create_agent(updated_cfg, agent_cls, model_cls)
+        self.updated_cfg = cfg
 
     @abstractmethod
     def create_env(self, cfg):
@@ -40,6 +41,12 @@ class BaseGame(ABC):
     def name(self):
         return self.__class__.__name__
 
+    def get_weights_path(self, ensure=False):
+        weights_basepath = self.updated_cfg.get('weight_path', './weights')
+        if ensure and not os.path.exists(weights_basepath):
+            os.makedirs(weights_basepath)
+        return os.path.join(weights_basepath, f'{self.name}.h5')
+
     def create_agent(self, cfg, agent_cls, model_cls):
         assert self.state_size > 0, 'state, env is not initialized correctly'
         assert self.action_size > 0, 'action, env is not initialized correctly'
@@ -49,9 +56,7 @@ class BaseGame(ABC):
         self.agent = agent_cls(cfg, model_cls)
         print('create agent done')
         # load weights if available
-        self.weights_basepath = cfg.get('weight_path', './weights')
-        self.weights_path = os.path.join(self.weights_basepath, f'{self.name}.h5')
-        self.agent.load_weights(self.weights_path)
+        self.agent.load_weights(self.get_weights_path())
 
     @abstractmethod
     def run_one_game(self, episode):
@@ -64,6 +69,4 @@ class BaseGame(ABC):
                 self.run_one_game(episode)
         finally:
             # always save the model even if we press ctrl+c
-            if not os.path.exists(self.weights_basepath):
-                os.makedirs(self.weights_basepath)
-            self.agent.save_weights(self.weights_path)
+            self.agent.save_weights(self.get_weights_path(True))
