@@ -3,7 +3,14 @@
 Let's train an AI agent to play games from OpenAI Gym
 
 
-## How to run it?\r
+## Setup
+```
+python3 -m virtualenv env
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+## How to run it?
 
 
 1. activate env
