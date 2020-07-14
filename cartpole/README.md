@@ -19,8 +19,8 @@
 ### AI model
 
 * input: 4 (state_size)
-* output: 3 (action_size)
-* sequential: input -> dense(24) -> dense(24) -> dense(output=3)
+* output: 2 (action_size)
+* sequential: input -> dense(24) -> dense(24) -> dense(output=2)
 
 
 ### Result of Last 500 Episodes
