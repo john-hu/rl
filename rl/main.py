@@ -20,6 +20,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--display', type=str2bool, default=False)
     parser.add_argument('--episodes', type=int, default=10000)
+    parser.add_argument('--episode-start', type=int, default=1)
     parser.add_argument('--config', type=str, required=True)
     parser.add_argument('--game', type=str, required=True)
     parser.add_argument('--agent', type=str, required=True)
@@ -34,6 +35,7 @@ def main():
     cfg_game = cfg.get('game', {})
     cfg_game['display'] = args.display
     cfg_game['episodes'] = args.episodes
+    cfg_game['episode_start'] = args.episode_start
     game = create_game(args.game, cfg, agent_cls, model_cls)
     game.run()
 

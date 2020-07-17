@@ -29,6 +29,7 @@ class GymBaseGame(BaseGame):
             # choose action with the model
             action = self.agent.choose_action(state)
             (next_state, reward, done, _) = self.env.step(action)
+            reward = self.transform_reward(state, action, reward, next_state, done)
             self.agent.remember(state, action, reward, next_state, done)
             self.on_step_result(state, action, reward, next_state, done)
             if self.train_on_step:
@@ -38,3 +39,16 @@ class GymBaseGame(BaseGame):
         if self.train_on_replay:
             # train the model with the history
             self.agent.replay(self.training_batch_size)
+
+    # pylint: disable=R0201
+    def transform_reward(self, _state, _action, reward, _next_state, _done):
+        return reward
+
+    def on_step_result(self, state, action, reward, next_state, done):
+        pass
+
+    def on_game_reset(self, episode):
+        pass
+
+    def on_game_end(self, episode):
+        pass

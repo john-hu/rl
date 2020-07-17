@@ -32,4 +32,5 @@ class CartPole(GymBaseGame):
         self.step_count = 0
 
     def on_game_end(self, episode):
-        print(f'Episode {episode + 1}# Score: {self.step_count}')
+        episode_index = self.updated_cfg['game'].get('episode_start', 1) + episode
+        print(f'Episode {episode_index}# Score: {self.step_count}')
