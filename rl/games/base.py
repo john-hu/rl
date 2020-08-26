@@ -18,7 +18,8 @@ class BaseGame(ABC):
         # create env
         self.updated_cfg = self.create_env(cfg)
         print('create env done')
-        self.create_agent(self.updated_cfg, agent_cls, model_cls)
+        self.create_agent(self.updated_cfg, agent_cls, model_cls,
+                          cfg_game.get('load_weights', True))
 
     @abstractmethod
     def create_env(self, cfg):
@@ -46,7 +47,7 @@ class BaseGame(ABC):
             os.makedirs(weights_basepath)
         return os.path.join(weights_basepath, f'{self.name}.h5')
 
-    def create_agent(self, cfg, agent_cls, model_cls):
+    def create_agent(self, cfg, agent_cls, model_cls, load_weights):
         assert self.state_size > 0, 'state, env is not initialized correctly'
         assert self.action_size > 0, 'action, env is not initialized correctly'
         cfg['state_size'] = self.state_size
@@ -55,7 +56,8 @@ class BaseGame(ABC):
         self.agent = agent_cls(cfg, model_cls)
         print('create agent done')
         # load weights if available
-        self.agent.load_weights(self.get_weights_path())
+        if load_weights:
+            self.agent.load_weights(self.get_weights_path())
 
     @abstractmethod
     def run_one_game(self, episode):
