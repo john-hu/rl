@@ -4,6 +4,8 @@ from .connected import create_model_factory
 def get_model_cls(model):
     if model == 'small':
         return create_model_factory(2, [24] * 2)
+    if model == 'small2':
+        return create_model_factory(3, [16] * 3)
     if model == 'wide':
         return create_model_factory(2, [1024] * 2)
     if model == 'deep':
