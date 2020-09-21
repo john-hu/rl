@@ -14,7 +14,7 @@ class BaseGame(ABC):
         self.env = None
         self.agent = None
         self.train_on_step = cfg_game.get('train_on_step', False)
-        self.train_on_replay = cfg_game.get('train_on_replay', True)
+        self.train_on_replay = cfg_game.get('train_on_replay', {'enabled': True})
         # create env
         self.updated_cfg = self.create_env(cfg)
         print('create env done')

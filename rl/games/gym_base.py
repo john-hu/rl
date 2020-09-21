@@ -36,9 +36,14 @@ class GymBaseGame(BaseGame):
                 self.agent.train_on_step(state, action, reward, next_state, done)
             state = next_state
         self.on_game_end(episode)
-        if self.train_on_replay:
+        if self.train_on_replay['enabled']:
+            batch_replay = self.train_on_replay.get('batch_replay', False)
             # train the model with the history
-            self.agent.replay(self.training_batch_size)
+            if batch_replay:
+                epochs = self.train_on_replay.get('batch_epochs', 1)
+                self.agent.replay_batch(self.training_batch_size, epochs)
+            else:
+                self.agent.replay(self.training_batch_size)
 
     # pylint: disable=R0201
     def transform_reward(self, _state, _action, reward, _next_state, _done):

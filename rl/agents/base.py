@@ -10,6 +10,7 @@ class BaseAgent(ABC):
         self.memory = deque(maxlen=cfg_agent.get('memory_size', 2000))
         self.learning_rate = cfg_agent.get('learning_rate', 0.001)
         self.gamma = cfg_agent.get('gamma', 0.95)
+        self.verbose_mode = cfg_agent.get('verbose', False)
 
     @abstractmethod
     def load_weights(self, weights_path):

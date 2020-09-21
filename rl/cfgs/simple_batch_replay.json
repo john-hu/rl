@@ -3,7 +3,8 @@
     "agent": {
         "memory_size": 2000,
         "learning_rate": 0.001,
-        "gamma": 0.95
+        "gamma": 0.95,
+        "verbose": false
     },
     "epsilon": {
         "exploration_rate": 1.0,
@@ -16,7 +17,9 @@
         "weight_path": "./weights",
         "train_on_step": false,
         "train_on_replay": {
-            "enabled": true
+            "enabled": true,
+            "batch_replay": true,
+            "batch_epochs": 1
         }
     }
 }
