@@ -1,4 +1,4 @@
-from .gym_base import GymBaseGame
+from .step_count_gym_game import StepCountGymGame
 
 
 # Input:
@@ -16,21 +16,7 @@ from .gym_base import GymBaseGame
 #     * Pole angle > 12 deg or Pole angle < -12 deg
 #     * Cart position > 2.4 or Cart position < -2.4
 #     * step == 500
-class CartPole(GymBaseGame):
-    def __init__(self, cfg, agent_cls, model_cls):
-        super().__init__(cfg, agent_cls, model_cls)
-        self.step_count = 0
-
+class CartPole(StepCountGymGame):
     @property
     def game_name(self):
         return 'CartPole-v1'
-
-    def on_step_result(self, state, action, reward, next_state, done):
-        self.step_count += 1
-
-    def on_game_reset(self, episode):
-        self.step_count = 0
-
-    def on_game_end(self, episode):
-        episode_index = self.updated_cfg['game'].get('episode_start', 1) + episode
-        print(f'Episode {episode_index}# Score: {self.step_count}')

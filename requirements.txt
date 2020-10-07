@@ -6,6 +6,7 @@ astunparse==1.6.3
 async-timeout==3.0.1
 attrs==20.2.0
 autopep8==1.5.4
+box2d-py==2.3.8
 cachetools==4.1.1
 certifi==2020.6.20
 cfgv==3.2.0
