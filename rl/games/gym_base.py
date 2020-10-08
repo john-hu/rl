@@ -10,6 +10,12 @@ class GymBaseGame(BaseGame):
     def game_name(self):
         pass
 
+    def skip_step_training(self, _state, _action, _reward, _next_state, _done):
+        pass
+
+    def skip_replay_training(self):
+        pass
+
     def create_env(self, cfg):
         self.env = gym.make(self.game_name)
         self.state_size = self.env.observation_space.shape[0]
@@ -32,11 +38,12 @@ class GymBaseGame(BaseGame):
             reward = self.transform_reward(state, action, reward, next_state, done)
             self.agent.remember(state, action, reward, next_state, done)
             self.on_step_result(state, action, reward, next_state, done)
-            if self.train_on_step:
+            if self.train_on_step and\
+                    not self.skip_step_training(state, action, reward, next_state, done):
                 self.agent.train_on_step(state, action, reward, next_state, done)
             state = next_state
         self.on_game_end(episode)
-        if self.train_on_replay['enabled']:
+        if self.train_on_replay['enabled'] and not self.skip_replay_training():
             batch_replay = self.train_on_replay.get('batch_replay', False)
             # train the model with the history
             if batch_replay:

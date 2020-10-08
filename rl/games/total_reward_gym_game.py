@@ -25,4 +25,6 @@ class TotalRewardGymGame(GymBaseGame):
 
     def on_game_end(self, episode):
         episode_index = self.updated_cfg['game'].get('episode_start', 1) + episode
-        print(f'Episode {episode_index}# Total Score: {self.total_reward} {self.step}')
+        print(f'Episode {episode_index}# Total Score: {self.total_reward} {self.step} {self.done}')
+        if self.done:
+            print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')

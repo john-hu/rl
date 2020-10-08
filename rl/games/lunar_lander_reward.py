@@ -26,12 +26,17 @@ class LunarLanderReward(LunarLander):
     def name(self):
         return 'LunarLander-reward'
 
-    def transform_reward(self, state, action, reward, next_state, done):
+    def transform_reward(self, _state, _action, reward, next_state, done):
         new_reward = -abs(next_state[0])\
             - abs(next_state[1])\
             - abs(next_state[2])\
             - abs(next_state[3])\
             - abs(next_state[4])\
             - abs(next_state[5])\
-            + (200 - self.step)
-        return super().transform_reward(state, action, new_reward, next_state, done)
+            + ((200 - self.step) / 500)
+        if done and reward > 50:
+            self.done = True
+            new_reward += 2000
+        self.total_reward += new_reward
+        self.step += 1
+        return new_reward
