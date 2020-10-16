@@ -18,3 +18,7 @@ class MountainCar(TotalRewardGymGame):
     @property
     def game_name(self):
         return 'MountainCar-v0'
+
+    def on_step_result(self, state, action, reward, next_state, done):
+        super().on_step_result(state, action, reward, next_state, done)
+        self.done = done

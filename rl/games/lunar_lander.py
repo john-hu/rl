@@ -32,4 +32,5 @@ class LunarLander(TotalRewardGymGame):
         return self.total_reward
 
     def on_step_result(self, state, action, reward, next_state, done):
-        pass
+        if done and reward > 50:
+            self.done = True
