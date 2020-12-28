@@ -26,25 +26,36 @@ class LunarLanderReward(LunarLander):
     def name(self):
         return 'LunarLander-reward'
 
+    def on_step_result(self, state, action, reward, next_state, done):
+        pass
+
     def transform_reward(self, _state, _action, reward, next_state, done):
         # 1. make it center
         # 2. make it goes down
         # 3. make it not move horizontally
         # 4. make it not move slowlly
         # 5. & 6. make it not rotate
-        new_reward = -abs(next_state[0])\
-            - next_state[1] * 10\
+        new_reward = -abs(next_state[0]) * 4\
+            - 1 / (next_state[1] + 0.01)\
             - abs(next_state[2])\
-            - abs(next_state[3]) * 2\
-            - abs(next_state[4])\
+            - abs(next_state[3]) * 5\
+            - abs(next_state[4]) * 2\
             - abs(next_state[5])
         # punish if the lander goes up
         if next_state[1] > 2:
-            new_reward -= 10
+            new_reward -= 100
+
+        if next_state[6] == 1:
+            new_reward += 10
+
+        if next_state[7] == 1:
+            new_reward += 10
+
         # give extra bounce if landed
         if done and reward > 50:
             self.done = True
             new_reward += 2000
+            print(f'original reward: {reward} => {done}')
         self.total_reward += new_reward
         self.step += 1
         return new_reward
