@@ -21,4 +21,4 @@ class MountainCar(TotalRewardGymGame):
 
     def on_step_result(self, state, action, reward, next_state, done):
         super().on_step_result(state, action, reward, next_state, done)
-        self.done = reward == 0
+        self.done = self.step < 200 and done

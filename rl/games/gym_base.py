@@ -27,7 +27,7 @@ class GymBaseGame(BaseGame):
     def run_one_game(self, episode):
         state = self.env.reset()
         self.on_game_reset(episode)
-
+        self.agent.game_start(episode)
         done = False
         while not done:
             if self.display:
@@ -51,6 +51,7 @@ class GymBaseGame(BaseGame):
                 self.agent.replay_batch(self.training_batch_size, epochs)
             else:
                 self.agent.replay(self.training_batch_size)
+        self.agent.game_end(episode)
 
     # pylint: disable=R0201
     def transform_reward(self, _state, _action, reward, _next_state, _done):

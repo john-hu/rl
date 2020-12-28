@@ -24,5 +24,8 @@ class MountainCarReward(TotalRewardGymGame):
         return 'MC-v0-rewarded'
 
     def transform_reward(self, state, _action, reward, _next_state, _done):
-        self.done = reward == 0
         return 200 if state[0] >= 0.5 else abs(state[1])
+
+    def on_step_result(self, state, action, reward, next_state, done):
+        super().on_step_result(state, action, reward, next_state, done)
+        self.done = self.step < 200 and done

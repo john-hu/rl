@@ -35,3 +35,9 @@ class BaseAgent(ABC):
     @abstractmethod
     def replay(self, batch_size):
         pass
+
+    def game_start(self, episode):
+        pass
+
+    def game_end(self, episode):
+        pass
