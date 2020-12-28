@@ -24,3 +24,9 @@ pip install -r requirements.txt
     ```
     python -m rl.main --display yes --episodes 1000 --game cartpole --agent simple --config rl/cfgs/simple.json --model small
     ```
+
+## How to draw the model?
+
+```
+python -m rl.plot_model --game cartpole --agent simple --config rl/cfgs/simple.json --model small --to_file model.png
+```
