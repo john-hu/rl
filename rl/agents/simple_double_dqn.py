@@ -7,7 +7,7 @@ class SimpleDoubleDQNAgent(SimpleAgent):
     def __init__(self, cfg, model_cls):
         super().__init__(cfg, model_cls)
         cfg_agent = cfg.get('agent', {})
-        self.target_model_update_interval = cfg_agent.get('target_update_interval', 10)
+        self.target_model_update_interval = cfg_agent.get('target_update_interval', 100)
         self.target_model = model_cls.create({
             'input': self.state_size,
             'output': self.action_size,
@@ -36,6 +36,7 @@ class SimpleDoubleDQNAgent(SimpleAgent):
         self.target_model.set_weights(self.model.get_weights())
 
     def game_end(self, episode):
-        if episode % self.target_model_update_interval == 0 and episode > 0:
-            print(f'update weights at {episode}')
+        executed_count = episode + 1
+        if executed_count % self.target_model_update_interval == 0 and episode > 0:
+            print(f'update weights at {executed_count}')
             self.__sync_predict_target_weights()
