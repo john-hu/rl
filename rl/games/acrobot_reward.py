@@ -28,4 +28,5 @@ class AcrobotReward(TotalRewardGymGame):
         return 'Acrobot-v1-rewarded'
 
     def transform_reward(self, _state, _action, reward, next_state, _done):
+        self.done = reward == 0
         return 200 if reward == 0 else abs(next_state[4])

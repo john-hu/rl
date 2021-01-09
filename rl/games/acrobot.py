@@ -25,4 +25,4 @@ class Acrobot(TotalRewardGymGame):
 
     def on_step_result(self, state, action, reward, next_state, done):
         super().on_step_result(state, action, reward, next_state, done)
-        self.done = done
+        self.done = reward == 0
