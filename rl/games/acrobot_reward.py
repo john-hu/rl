@@ -30,3 +30,6 @@ class AcrobotReward(TotalRewardGymGame):
     def transform_reward(self, _state, _action, reward, next_state, _done):
         self.done = reward == 0
         return 200 if reward == 0 else abs(next_state[4])
+
+    def check_replay_training(self, skip_rule):
+        return self.step < skip_rule

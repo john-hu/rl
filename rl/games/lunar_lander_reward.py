@@ -40,3 +40,6 @@ class LunarLanderReward(LunarLander):
         self.total_reward += new_reward
         self.step += 1
         return new_reward
+
+    def check_replay_training(self, skip_rule):
+        return self.done

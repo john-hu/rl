@@ -26,3 +26,6 @@ class Acrobot(TotalRewardGymGame):
     def on_step_result(self, state, action, reward, next_state, done):
         super().on_step_result(state, action, reward, next_state, done)
         self.done = reward == 0
+
+    def check_replay_training(self, skip_rule):
+        return self.step < skip_rule

@@ -5,16 +5,37 @@ from .base import BaseGame
 
 
 class GymBaseGame(BaseGame):
+    def __init__(self, cfg, agent_cls, model_cls):
+        super().__init__(cfg, agent_cls, model_cls)
+        self.skip_replay_count = 0
+
     @property
     @abstractmethod
     def game_name(self):
+        pass
+
+    @abstractmethod
+    def check_replay_training(self, skip_rule):
         pass
 
     def skip_step_training(self, _state, _action, _reward, _next_state, _done):
         pass
 
     def skip_replay_training(self):
-        pass
+        game_cfg = self.updated_cfg.get('game', {})
+        skip_rule = game_cfg.get('skip_replay_rule')
+        if not skip_rule:
+            return False
+        if self.check_replay_training(skip_rule):
+            self.skip_replay_count += 1
+            print(f'skip replay training skipped count: {self.skip_replay_count}')
+            # skip the training only if the count exceeded skip_replay_min_count continuously
+            return self.skip_replay_count > game_cfg.get('skip_replay_min_count', 5)
+        # reset the counter if one round failed
+        if self.skip_replay_count > 0:
+            print(f'reset skip replay training, original: {self.skip_replay_count}')
+        self.skip_replay_count = 0
+        return False
 
     def create_env(self, cfg):
         self.env = gym.make(self.game_name)

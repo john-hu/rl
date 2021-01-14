@@ -20,3 +20,6 @@ class CartPole(StepCountGymGame):
     @property
     def game_name(self):
         return 'CartPole-v1'
+
+    def check_replay_training(self, skip_rule):
+        return self.step > skip_rule

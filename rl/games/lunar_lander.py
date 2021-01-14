@@ -34,3 +34,6 @@ class LunarLander(TotalRewardGymGame):
     def on_step_result(self, state, action, reward, next_state, done):
         if done and reward > 50:
             self.done = True
+
+    def check_replay_training(self, skip_rule):
+        return self.done
