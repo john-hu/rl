@@ -20,14 +20,15 @@ class SimpleDoubleDQNAgent(SimpleAgent):
         print('init target model with predict model')
         self.__sync_predict_target_weights()
 
-    def __calc_training_target(self, state, action, reward, next_state, done):
-        target_f = super().__calc_training_target(state, action, reward, next_state, done)
+    def calc_training_target(self, state, action, reward, next_state, done):
+        target_f = super().calc_training_target(state, action, reward, next_state, done)
         if done:
             return target_f
+        target_action = np.argmax(target_f)
         # reshape the state to [1, self.state_size]
         np_next_state = np.reshape(next_state, [1, self.state_size])
         # calcuare the next action rewards with the target model
-        next_reward = np.amax(self.target_model.predict(np_next_state)[0])
+        next_reward = self.target_model.predict(np_next_state)[0][target_action]
         # change the target_f with the next_reward
         target_f[0][action] = reward + self.gamma * next_reward
         return target_f

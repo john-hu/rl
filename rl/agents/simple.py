@@ -61,7 +61,7 @@ class SimpleAgent(BaseAgent):
         new_target_f = []
 
         for (state, action, reward, next_state, done) in training_batch:
-            target_f = self.__calc_training_target(state, action, reward, next_state, done)
+            target_f = self.calc_training_target(state, action, reward, next_state, done)
             new_state.append(state)
             new_target_f.append(target_f[0])
 
@@ -75,7 +75,7 @@ class SimpleAgent(BaseAgent):
             print(f'avg_loss = {avg_loss}, exploration_rate = {self.exploration.exploration_rate}')
         return avg_loss
 
-    def __calc_training_target(self, state, action, reward, next_state, done):
+    def calc_training_target(self, state, action, reward, next_state, done):
         # reshape the state to [1, self.state_size]
         np_state = np.reshape(state, [1, self.state_size])
         np_next_state = np.reshape(next_state, [1, self.state_size])
@@ -91,6 +91,6 @@ class SimpleAgent(BaseAgent):
         return target_f
 
     def train_on_step(self, state, action, reward, next_state, done):
-        target_f = self.__calc_training_target(state, action, reward, next_state, done)
+        target_f = self.calc_training_target(state, action, reward, next_state, done)
         np_state = np.reshape(state, [1, self.state_size])
         self.model.fit(np_state, target_f, epochs=1, verbose=0)
