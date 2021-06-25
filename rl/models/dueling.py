@@ -1,7 +1,7 @@
-import keras.backend as K
-from keras.models import Model
-from keras.layers import Dense, Input, Lambda
-from keras.optimizers import Adam
+import tensorflow.keras.backend as K
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input, Lambda
+from tensorflow.keras.optimizers import Adam
 
 
 def calc_output_value(data):
@@ -20,7 +20,7 @@ def create_dueling_model(cfg, layer_count, dense_count):
     dueling_dense = Dense(cfg['output'] + 1, activation='linear')(current_dense)
     output = Lambda(calc_output_value, output_shape=(cfg['output'],))(dueling_dense)
     model = Model(input_dense, output)
-    model.compile(loss='mse', optimizer=Adam(lr=cfg['learning_rate']))
+    model.compile(loss='mse', optimizer=Adam(learning_rate=cfg['learning_rate']))
     return model
 
 

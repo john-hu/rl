@@ -1,4 +1,4 @@
-from keras.utils.vis_utils import plot_model
+from tensorflow.keras.utils import plot_model
 
 from .games import create_game
 from .utils import create_parser, parse_args

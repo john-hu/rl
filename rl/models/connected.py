@@ -1,6 +1,6 @@
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.optimizers import Adam
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
 
 
 def create_model(cfg, layer_count, dense_count):
@@ -12,7 +12,7 @@ def create_model(cfg, layer_count, dense_count):
         else:
             model.add(Dense(dense_count[i], activation='relu'))
     model.add(Dense(cfg['output'], activation='linear'))
-    model.compile(loss='mse', optimizer=Adam(lr=cfg['learning_rate']))
+    model.compile(loss='mse', optimizer=Adam(learning_rate=cfg['learning_rate']))
     return model
 
 
