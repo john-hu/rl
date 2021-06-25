@@ -4,6 +4,7 @@ Let's train an AI agent to play games from OpenAI Gym
 
 
 ## Setup
+* Install python 3.9
 ```
 python3 -m virtualenv env
 source env/bin/activate
