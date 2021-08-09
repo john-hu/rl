@@ -7,7 +7,7 @@ from .lunar_lander import LunarLander
 #     * 2: fire main engine
 #     * 3: fire right engine
 # Observe:
-#     * s[0]: is the horizontal coordinate
+#     * s[0]: is the horizontal coordinate  (width 20)
 #     * s[1]: is the vertical coordinate
 #     * s[2]: is the horizontal speed
 #     * s[3]: is the vertical speed
@@ -27,13 +27,12 @@ class LunarLanderReward(LunarLander):
         return 'LunarLander-reward'
 
     def transform_reward(self, _state, _action, reward, next_state, done):
-        new_reward = -abs(next_state[0])\
+        new_reward = -abs(next_state[0]) * 2\
             - abs(next_state[1])\
             - abs(next_state[2])\
             - abs(next_state[3])\
-            - abs(next_state[4])\
-            - abs(next_state[5])\
-            + ((200 - self.step) / 500)
+            - abs(next_state[4]) * 2\
+            - abs(next_state[5])
         if done and reward > 50:
             self.done = True
             new_reward += 2000

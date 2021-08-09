@@ -14,6 +14,9 @@ class TotalRewardGymGame(GymBaseGame):
     def game_name(self):
         pass
 
+    def get_score(self):
+        return self.total_reward
+
     def on_step_result(self, state, action, reward, next_state, done):
         self.total_reward += reward
         self.step += 1

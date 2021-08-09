@@ -13,6 +13,9 @@ class StepCountGymGame(GymBaseGame):
     def game_name(self):
         pass
 
+    def get_score(self):
+        return self.step
+
     def on_step_result(self, state, action, reward, next_state, done):
         self.step += 1
         self.done = done

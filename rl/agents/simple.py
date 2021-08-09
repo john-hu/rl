@@ -57,6 +57,14 @@ class SimpleAgent(BaseAgent):
         else:
             training_batch = random.sample(self.memory, batch_size)
 
+        avg_loss = self.replay_batch_records(training_batch, epochs)
+        # decay the exploration rate
+        self.exploration.decay()
+        if self.verbose_mode:
+            print(f'avg_loss = {avg_loss}, exploration_rate = {self.exploration.exploration_rate}')
+        return avg_loss
+
+    def replay_batch_records(self, training_batch, epochs=1):
         new_state = []
         new_target_f = []
 
@@ -69,10 +77,6 @@ class SimpleAgent(BaseAgent):
         fit = self.model.fit(np.array(new_state), np.array(
             new_target_f), epochs=epochs, verbose=0)
         avg_loss = np.average(np.array(fit.history['loss']))
-        # decay the exploration rate
-        self.exploration.decay()
-        if self.verbose_mode:
-            print(f'avg_loss = {avg_loss}, exploration_rate = {self.exploration.exploration_rate}')
         return avg_loss
 
     def calc_training_target(self, state, action, reward, next_state, done):
