@@ -9,6 +9,7 @@ class GymBaseGame(BaseGame):
         super().__init__(cfg, agent_cls, model_cls)
         self.skip_replay_count = 0
         self.best_buckets = []
+        self.best_replay_count = self.train_on_replay.get('best_replay', 0)
         self.current_hitory = None
 
     @property
@@ -65,17 +66,23 @@ class GymBaseGame(BaseGame):
             action = self.agent.choose_action(state)
             (next_state, reward, done, _) = self.env.step(action)
             reward = self.transform_reward(state, action, reward, next_state, done)
-            current_history.append((state, action, reward, next_state, done))
+            if self.best_replay_count > 0:
+                current_history.append((state, action, reward, next_state, done))
             self.agent.remember(state, action, reward, next_state, done)
             self.on_step_result(state, action, reward, next_state, done)
             if self.train_on_step and\
                     not self.skip_step_training(state, action, reward, next_state, done):
-                self.agent.train_on_step(state, action, reward, next_state, done)
+                if self.train_on_step == "step":
+                    self.agent.train_on_step(state, action, reward, next_state, done)
+                elif self.train_on_step == "replay":
+                    self.agent.replay_batch(self.training_batch_size, 1)
+
             state = next_state
         self.on_game_end(episode)
         # update best bucket
         self.update_best_bucket(self.get_score(), current_history)
         self.replay_training()
+        self.replay_best_buckets()
         self.agent.game_end(episode)
 
     def update_best_bucket(self, score, current_history):
@@ -84,8 +91,7 @@ class GymBaseGame(BaseGame):
             'history': current_history
         })
         self.best_buckets.sort(key=lambda bucket: bucket['score'], reverse=True)
-        best_buckets_count = self.train_on_replay.get('best_replay', 0)
-        self.best_buckets = self.best_buckets[0:best_buckets_count]
+        self.best_buckets = self.best_buckets[0:self.best_replay_count]
 
     def replay_training(self):
         if self.train_on_replay['enabled'] and not self.skip_replay_training():
@@ -96,10 +102,9 @@ class GymBaseGame(BaseGame):
                 self.agent.replay_batch(self.training_batch_size, epochs)
             else:
                 self.agent.replay(self.training_batch_size)
-            self.replay_best_buckets()
 
     def replay_best_buckets(self):
-        if self.train_on_replay.get('best_replay', 0) < 1:
+        if self.best_replay_count < 1:
             return
         # replay the best game history
         best_scores = ', '.join([str(round(bucket['score'], 4)) for bucket in self.best_buckets])

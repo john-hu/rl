@@ -14,7 +14,8 @@
     "game": {
         "training_batch_size": 32,
         "weight_path": "./weights",
-        "train_on_step": false,
+        "__train_on_step_candidates": "null, step(str), replay(sr)",
+        "train_on_step": null,
         "train_on_replay": {
             "enabled": true
         }

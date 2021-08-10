@@ -15,7 +15,7 @@
     "game": {
         "training_batch_size": 32,
         "weight_path": "./weights",
-        "train_on_step": false,
+        "train_on_step": null,
         "train_on_replay": {
             "enabled": true,
             "batch_replay": true,

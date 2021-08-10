@@ -1,7 +1,7 @@
 {
     "__comment1": "agent arguments",
     "agent": {
-        "memory_size": 2000,
+        "memory_size": 500,
         "learning_rate": 0.001,
         "gamma": 0.95
     },
@@ -12,9 +12,9 @@
     },
     "__comment2": "game arguments",
     "game": {
-        "training_batch_size": 256,
+        "training_batch_size": 32,
         "weight_path": "./weights",
-        "train_on_step": false,
+        "train_on_step": null,
         "train_on_replay": {
             "enabled": true,
             "best_replay": 2

@@ -53,9 +53,9 @@ class SimpleAgent(BaseAgent):
 
     def replay_batch(self, batch_size, epochs=1):
         if len(self.memory) < batch_size:
-            training_batch = self.memory
-        else:
-            training_batch = random.sample(self.memory, batch_size)
+            return
+
+        training_batch = random.sample(self.memory, batch_size)
 
         avg_loss = self.replay_batch_records(training_batch, epochs)
         # decay the exploration rate
@@ -65,17 +65,22 @@ class SimpleAgent(BaseAgent):
         return avg_loss
 
     def replay_batch_records(self, training_batch, epochs=1):
-        new_state = []
-        new_target_f = []
+        states = np.array([np.reshape(i[0], [1, self.state_size]) for i in training_batch])
+        actions = np.array([i[1] for i in training_batch])
+        rewards = np.array([i[2] for i in training_batch])
+        next_states = np.array([np.reshape(i[3], [1, self.state_size]) for i in training_batch])
+        dones = np.array([i[4] for i in training_batch])
 
-        for (state, action, reward, next_state, done) in training_batch:
-            target_f = self.calc_training_target(state, action, reward, next_state, done)
-            new_state.append(state)
-            new_target_f.append(target_f[0])
+        states = np.squeeze(states)
+        next_states = np.squeeze(next_states)
 
+        rewards_next = self.model.predict_on_batch(next_states)
+        targets = rewards + self.gamma * np.amax(rewards_next, axis=1) * (1 - dones)
+        new_target_f = self.model.predict_on_batch(states)
+        indexs = np.array([i for i in range(len(training_batch))])
+        new_target_f[[indexs], [actions]] = targets
         # train in batch
-        fit = self.model.fit(np.array(new_state), np.array(
-            new_target_f), epochs=epochs, verbose=0)
+        fit = self.model.fit(states, new_target_f, epochs=epochs, verbose=0)
         avg_loss = np.average(np.array(fit.history['loss']))
         return avg_loss
 

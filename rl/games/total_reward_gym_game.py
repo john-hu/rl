@@ -6,6 +6,7 @@ class TotalRewardGymGame(GymBaseGame):
     def __init__(self, cfg, agent_cls, model_cls):
         super().__init__(cfg, agent_cls, model_cls)
         self.total_reward = 0
+        self.rewards = []
         self.done = False
         self.step = 0
 
@@ -28,6 +29,9 @@ class TotalRewardGymGame(GymBaseGame):
 
     def on_game_end(self, episode):
         episode_index = self.updated_cfg['game'].get('episode_start', 1) + episode
-        print(f'Episode {episode_index}# Total Score: {self.total_reward} {self.step} {self.done}')
+        self.rewards.append(self.total_reward)
+        self.rewards = self.rewards[-100:]
+        avg_rewards = sum(self.rewards) / len(self.rewards)
+        print(f'Episode {episode_index}# Total Score: {self.total_reward} - {avg_rewards} {self.step} {self.done}')
         if self.done:
             print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
