@@ -32,6 +32,7 @@ class TotalRewardGymGame(GymBaseGame):
         self.rewards.append(self.total_reward)
         self.rewards = self.rewards[-100:]
         avg_rewards = sum(self.rewards) / len(self.rewards)
-        print(f'Episode {episode_index}# Total Score: {self.total_reward} - {avg_rewards} {self.step} {self.done}')
+        print(f'Episode {episode_index}# Total Score: {self.total_reward}, avg: {avg_rewards}' +\
+              f', step: {self.step}, done: {self.done}')
         if self.done:
             print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
