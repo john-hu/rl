@@ -26,12 +26,9 @@ class LunarLander(TotalRewardGymGame):
     def game_name(self):
         return 'LunarLander-v2'
 
-    def transform_reward(self, _state, _action, reward, _next_state, _done):
+    def on_step_result(self, state, action, reward, next_state, done):
         self.total_reward += reward
         self.step += 1
-        return self.total_reward
-
-    def on_step_result(self, state, action, reward, next_state, done):
         if done and reward > 199:
             self.done = True
 
