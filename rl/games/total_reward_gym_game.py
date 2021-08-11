@@ -9,6 +9,7 @@ class TotalRewardGymGame(GymBaseGame):
         self.rewards = []
         self.done = False
         self.step = 0
+        self.final_reward = 0
 
     @property
     @abstractmethod
@@ -33,6 +34,6 @@ class TotalRewardGymGame(GymBaseGame):
         self.rewards = self.rewards[-100:]
         avg_rewards = sum(self.rewards) / len(self.rewards)
         print(f'Episode {episode_index}# Total Score: {self.total_reward}, avg: {avg_rewards}' +\
-              f', step: {self.step}, done: {self.done}')
+              f', step: {self.step}, done: {self.done}, final: {self.final_reward}')
         if self.done:
             print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
