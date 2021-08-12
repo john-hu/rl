@@ -47,7 +47,7 @@ class LunarLander(TotalRewardGymGame):
 
     def skip_step_training(self, _state, _action, _reward, _next_state, _done):
         # skip training if continuous 5 success.
-        return self.success_count > 0
+        return self.success_count > 5
 
     def check_replay_training(self, skip_rule):
         # skip training if continuous 5 success.
